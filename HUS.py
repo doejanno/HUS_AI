@@ -3,7 +3,8 @@ class Player:
         self.front = [0, 0, 0, 0, 2, 2, 2, 2]
         self.back = [2, 2, 2, 2, 2, 2, 2, 2]
         self.side = self.front + self.back
-        self.stones = sum(self.side)
+        self.stone_count = sum(self.side)
+        self.legal_moves = self.get_legal_moves()
 
 
     def show_side_bott(self):
@@ -25,7 +26,8 @@ class Player:
         stones = self.side[st]
         stones = stones + start_stones
         if stones == 1: # if there is only one stone the move is does nothing
-            return self.game_end()
+            self.update_vars()
+            return self.is_game_over()
         self.side[st] = 0 # empty the tile
         st = (st + 1) % len(self.side) # if we go abve the board size we loop around
         while stones != 0: # loop as long as we have stones
@@ -44,7 +46,8 @@ class Player:
                     stones = stones + self.take(opp, st)
                     self.move(opp, st, stones)
                 break
-        return self.game_end()
+        self.update_vars()
+        return self.is_game_over()
     
     def take(self, opp, p_tile):
         snack = 0
@@ -60,7 +63,7 @@ class Player:
                     opp.side[15-opp_tile] = 0
         return snack
     
-    def game_end(self):
+    def is_game_over(self):
         # lose if you only have one stone in any tile left
         max_stones = max(self.side)
         if max_stones <= 1:
@@ -68,6 +71,26 @@ class Player:
         else:
             return True #Keep playing
 
+    def get_legal_moves(self):
+        # this function returns a board of the legal moves for a player. 1 = legal move, 0 = no legal move
+        legal_moves_side = []
+        for args in self.side:
+            if args > 1:
+                legal_moves_side.append(1)
+            else:
+                legal_moves_side.append(0)
+        return legal_moves_side
+    
+    def update_vars(self):
+        # function used to update the vars before each move
+        self.set_legal_moves()
+        self.set_stone_count()
+
+    def set_legal_moves(self):
+        self.legal_moves = self.get_legal_moves()
+    
+    def set_stone_count(self):
+        self.stone_count = sum(self.side)
 
 
 class Board:
