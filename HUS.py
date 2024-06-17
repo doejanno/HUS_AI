@@ -1,8 +1,7 @@
 class Player:
-    def __init__(self):
-        self.front = [0, 0, 0, 0, 2, 2, 2, 2]
-        self.back = [2, 2, 2, 2, 2, 2, 2, 2]
-        self.side = self.front + self.back
+    def __init__(self, player_side):
+        # creating player vars
+        self.side = player_side
         self.stone_count = sum(self.side)
         self.legal_moves = self.get_legal_moves()
 
@@ -73,6 +72,7 @@ class Player:
 
     def get_legal_moves(self):
         # this function returns a board of the legal moves for a player. 1 = legal move, 0 = no legal move
+        # Used to help AI navigate
         legal_moves_side = []
         for args in self.side:
             if args > 1:
@@ -94,9 +94,10 @@ class Player:
 
 
 class Board:
-    def __init__(self):
-        self.p1 = Player()
-        self.p2 = Player()
+    def __init__(self, p1_side, p2_side):
+        # creating player with given side so AI can input different boards
+        self.p1 = Player(p1_side)
+        self.p2 = Player(p2_side)
     
     def show_board(self):
         self.p1.show_side_top()
@@ -104,7 +105,7 @@ class Board:
         self.p2.show_side_bott()
 
     def play(self):
-        p_turn = True # True -> Player 1s turn
+        p_turn = True # True -> Player ones turn
         while True:
             if p_turn:
                 print("Player 1.Which tile do u move?")
@@ -124,8 +125,12 @@ class Board:
                     break
             self.show_board()
 
+front = [0, 0, 0, 0, 2, 2, 2, 2]
+back = [2, 2, 2, 2, 2, 2, 2, 2]
+# players need different sides due to pointer
+side1 = front + back
+side2 = front + back
 
-
-board = Board()
+board = Board(side1, side2)
 board.show_board()
 board.play()
