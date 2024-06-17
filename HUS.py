@@ -3,6 +3,8 @@ class Player:
         self.front = [0, 0, 0, 0, 2, 2, 2, 2]
         self.back = [2, 2, 2, 2, 2, 2, 2, 2]
         self.side = self.front + self.back
+        self.stones = sum(self.side)
+
 
     def show_side_bott(self):
         print(self.side[:8])
@@ -23,7 +25,7 @@ class Player:
         stones = self.side[st]
         stones = stones + start_stones
         if stones == 1: # if there is only one stone the move is does nothing
-            return
+            return self.game_end()
         self.side[st] = 0 # empty the tile
         st = (st + 1) % len(self.side) # if we go abve the board size we loop around
         while stones != 0: # loop as long as we have stones
@@ -42,7 +44,7 @@ class Player:
                     stones = stones + self.take(opp, st)
                     self.move(opp, st, stones)
                 break
-        return
+        return self.game_end()
     
     def take(self, opp, p_tile):
         snack = 0
@@ -57,6 +59,16 @@ class Player:
                     snack = snack + opp.side[15-opp_tile]
                     opp.side[15-opp_tile] = 0
         return snack
+    
+    def game_end(self):
+        # lose if you only have one stone in any tile left
+        max_stones = max(self.side)
+        if max_stones <= 1:
+            return False #Lost
+        else:
+            return True #Keep playing
+
+
 
 class Board:
     def __init__(self):
@@ -69,18 +81,24 @@ class Board:
         self.p2.show_side_bott()
 
     def play(self):
-        p_turn = True # True is for p1
+        p_turn = True # True -> Player 1s turn
         while True:
             if p_turn:
                 print("Player 1.Which tile do u move?")
                 arg = int(input())
-                self.p1.move(self.p2, arg, 0)
-                p_turn = False
+                if self.p1.move(self.p2, arg, 0):
+                    p_turn = False
+                else: 
+                    print("Player 1 lost")
+                    break
             else:
                 print("Player 2. Which tile do u move?")
                 arg = int(input())
-                self.p2.move(self.p1, arg, 0)
-                p_turn = True
+                if self.p2.move(self.p1, arg, 0):
+                    p_turn = True
+                else:
+                    print("Player 2 lost")
+                    break
             self.show_board()
 
 
