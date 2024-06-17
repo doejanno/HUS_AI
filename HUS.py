@@ -94,8 +94,13 @@ class Player:
 
 
 class Board:
-    def __init__(self, p1_side, p2_side):
+    def __init__(self):
         # creating player with given side so AI can input different boards
+        front = [0, 0, 0, 0, 2, 2, 2, 2]
+        back = [2, 2, 2, 2, 2, 2, 2, 2]
+        # players need different sides due to pointer
+        p1_side = front + back
+        p2_side = front + back
         self.p1 = Player(p1_side)
         self.p2 = Player(p2_side)
     
@@ -103,34 +108,3 @@ class Board:
         self.p1.show_side_top()
         print()
         self.p2.show_side_bott()
-
-    def play(self):
-        p_turn = True # True -> Player ones turn
-        while True:
-            if p_turn:
-                print("Player 1.Which tile do u move?")
-                arg = int(input())
-                if self.p1.move(self.p2, arg, 0):
-                    p_turn = False
-                else: 
-                    print("Player 1 lost")
-                    break
-            else:
-                print("Player 2. Which tile do u move?")
-                arg = int(input())
-                if self.p2.move(self.p1, arg, 0):
-                    p_turn = True
-                else:
-                    print("Player 2 lost")
-                    break
-            self.show_board()
-
-front = [0, 0, 0, 0, 2, 2, 2, 2]
-back = [2, 2, 2, 2, 2, 2, 2, 2]
-# players need different sides due to pointer
-side1 = front + back
-side2 = front + back
-
-board = Board(side1, side2)
-board.show_board()
-board.play()
