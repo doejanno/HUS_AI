@@ -108,3 +108,6 @@ class Board:
         self.p1.show_side_top()
         print()
         self.p2.show_side_bott()
+    
+    def get_board(self):
+        return self.p1.side + self.p2.side
