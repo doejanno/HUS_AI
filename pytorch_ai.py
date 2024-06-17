@@ -1,11 +1,11 @@
-import torch
-
-# Create a tensor from a list
-tensor_data = torch.tensor([1, 2, 3])
-
-# Create a matrix (2D tensor)
-matrix_data = torch.tensor([[1, 2], [3, 4]])
-
-# Get the size of a tensor
-print(tensor_data.size())  # Output: torch.Size([3])
-print(matrix_data.size())  # Output: torch.Size([2, 2])
+class DQN(nn.Module):
+    def __init__(self):
+        super(DQN, self).__init__()
+        self.fc1 = nn.Linear(32, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 16)
+    
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        return self.fc3(x)
