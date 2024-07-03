@@ -35,10 +35,10 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
                 reward = 0
 
 
-            next_state = board.get_board()
-            replay_buffer.push(state, action1, reward, next_state, done)
-            state = next_state
-            total_reward += reward
+                next_state = board.get_board()
+                replay_buffer.push(state, action1, reward, next_state, done)
+                state = next_state
+                total_reward += reward
 
             if not done and moves < MAX_MOVES:
                 # Player 2's turn
@@ -54,10 +54,10 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
                 board.p2.move(board.p1, action2, 0)
                 reward = 0
 
-            next_state = board.get_board()
-            replay_buffer.push(state, action2, reward, next_state, done)
-            state = next_state
-            total_reward += reward
+                next_state = board.get_board()
+                replay_buffer.push(state, action2, reward, next_state, done)
+                state = next_state
+                total_reward += reward
 
             moves += 1  # Increment the moves counter
 
