@@ -61,15 +61,15 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
 
             moves += 1  # Increment the moves counter
 
-    # Train both players
-    loss1 = player1.update(replay_buffer, batch_size, gamma)
-    loss2 = player2.update(replay_buffer, batch_size, gamma)
+            # Train both players
+            loss1 = player1.update(replay_buffer, batch_size, gamma)
+            loss2 = player2.update(replay_buffer, batch_size, gamma)
 
-    epsilon = max(epsilon_end, epsilon * epsilon_decay)
+            epsilon = max(epsilon_end, epsilon * epsilon_decay)
 
-    print(f"Episode {episode}, Total Reward: {total_reward}, Epsilon: {epsilon:.2f}")
+            print(f"Episode {episode}, Total Reward: {total_reward}, Epsilon: {epsilon:.2f}")
 
-    return player1, player2
+            return player1, player2
 
 if __name__ == "__main__":
     trained_player1, trained_player2 = train_dqn(1000)
