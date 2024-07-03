@@ -42,7 +42,6 @@ class DQN(nn.Module):
         	#print("Board state:", board_state)
         	#print("Legal moves:", legal_moves)
         	raise ValueError("No legal moves available")
-        	
         if random.random() < epsilon:
         	return random.choice(legal_indices)
             

@@ -25,12 +25,15 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
             #print("Player 1 turn")
             #print("Board state:", state)
             #print("Legal moves:", board.p1.legal_moves)
-            action1 = player1.get_move(state, board.p1.legal_moves, epsilon)
-            if board.p1.move(board.p2, action1, 0):
-                reward = 0
-            else:
-                reward = -1
-                done = True
+            if board.p1.is_game_over():
+            	print("Game over")
+            	done = true
+		    	action1 = player1.get_move(state, board.p1.legal_moves, epsilon)
+		    elif board.p1.move(board.p2, action1, 0):
+			reward = 0
+		    else:
+			reward = -1
+			done = True
             
             next_state = board.get_board()
             replay_buffer.push(state, action1, reward, next_state, done)
