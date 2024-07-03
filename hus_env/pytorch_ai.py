@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import random
-
-import random
 from collections import deque
 
 class ReplayBuffer:
@@ -37,17 +35,27 @@ class DQN(nn.Module):
         return x
 
     def get_move(self, board_state, legal_moves, epsilon=0.1):
-        if random.random() < epsilon:
-            return random.choice([i for i, move in enumerate(legal_moves) if move == 1])
+        legal_indices = [i for i, move in enumerate(legal_moves) if move == 1]
         
+        if not legal_indices:
+        	#print("No legal moves availible!")
+        	#print("Board state:", board_state)
+        	#print("Legal moves:", legal_moves)
+        	raise ValueError("No legal moves available")
+        	
+        if random.random() < epsilon:
+        	return random.choice(legal_indices)
+            
         state = torch.FloatTensor(board_state)
         with torch.no_grad():
             q_values = self(state)
         
-        legal_q_values = q_values * torch.FloatTensor(legal_moves)
-        return legal_q_values.argmax().item()
+        masked_q_values = q_values.clone()
+        masked_q_values[torch.tensor(legal_moves) == 0] = float('-inf')
+        
+        return masked_q_values.argmax().item()
 
-    def update(self, replay_buffer, batch_size, gamma):
+    def update(self, replay_buffer, batch_size, gamma): 
         if len(replay_buffer) < batch_size:
             return
         

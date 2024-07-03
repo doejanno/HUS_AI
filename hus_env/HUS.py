@@ -32,8 +32,8 @@ class Player:
 		        stones = self.side[st]
 		        self.side[st] = 0
 		        stones += self.take(opp, st)
-		    self.update_vars()
-		    return self.is_game_over()		
+	    self.update_vars()
+	    return not self.is_game_over()		
     
     
     def take(self, opp, p_tile):
@@ -52,10 +52,10 @@ class Player:
     def is_game_over(self):
         # lose if you only have one stone in any tile left
         max_stones = max(self.side)
-        if max_stones <= 1:
-            return False #Lost
-        else:
-            return True #Keep playing
+        for stones in self.side:
+            if stones > 1:
+                return False
+        return True
 
     def get_legal_moves(self):
         # this function returns a board of the legal moves for a player. 1 = legal move, 0 = no legal move

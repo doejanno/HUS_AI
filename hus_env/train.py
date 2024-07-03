@@ -3,7 +3,7 @@ import pytorch_ai
 import torch
 import random
 
-MAX_MOVES = 1000
+MAX_MOVES = 50
 
 def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilon_end=0.01, epsilon_decay=0.995):
     board = HUS.Board()
@@ -16,12 +16,15 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
     for episode in range(num_episodes):
         board = HUS.Board()  # Reset the board
         state = board.get_board()
-        done = False
+        done = 0
         total_reward = 0
         moves = 0
         
         while not done and moves < MAX_MOVES:
             # Player 1's turn
+            #print("Player 1 turn")
+            #print("Board state:", state)
+            #print("Legal moves:", board.p1.legal_moves)
             action1 = player1.get_move(state, board.p1.legal_moves, epsilon)
             if board.p1.move(board.p2, action1, 0):
                 reward = 0
@@ -36,6 +39,9 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
             
             if not done and moves < MAX_MOVES:
                 # Player 2's turn
+                #print("Player 2 turn")
+                #print("Board state:", state)
+                #print("Legal moves:", board.p2.legal_moves)
                 action2 = player2.get_move(state, board.p2.legal_moves, epsilon)
                 if board.p2.move(board.p1, action2, 0):
                     reward = 0
@@ -44,7 +50,7 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
                     done = True
                 
                 next_state = board.get_board()
-                replay_buffer.push(state, action2, -reward, next_state, done)
+                replay_buffer.push(state, action2, reward, next_state, done)
                 state = next_state
                 total_reward += reward
             
@@ -60,8 +66,8 @@ def train_dqn(num_episodes, batch_size=32, gamma=0.99, epsilon_start=1.0, epsilo
     
     return player1, player2
 
-
 if __name__ == "__main__":
     trained_player1, trained_player2 = train_dqn(1000)
     torch.save(trained_player1.state_dict(), "trained_player1.pth")
     torch.save(trained_player2.state_dict(), "trained_player2.pth")
+
