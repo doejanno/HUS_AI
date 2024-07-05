@@ -25,7 +25,7 @@ class DQN(nn.Module):
         self.fc3 = nn.Linear(64, 16)
         self.relu = nn.ReLU()
         
-        self.optimizer = optim.Adam(self.parameters())
+        self.optimizer = optim.Adam(self.parameters(), lr=0.001)
         self.loss_fn = nn.MSELoss()
 
     def forward(self, x):
@@ -48,6 +48,8 @@ class DQN(nn.Module):
         state = torch.FloatTensor(board_state)
         with torch.no_grad():
             q_values = self(state)
+        if len(q_values) != len(legal_moves):
+        	q_values = q_values[:len(legal_moves)]
         
         masked_q_values = q_values.clone()
         masked_q_values[torch.tensor(legal_moves) == 0] = float('-inf')
